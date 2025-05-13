@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Philosophical Quotes</title>
+  <title>Philosophical Quote</title>
   <style>
     body {
       background-color: #000;
@@ -84,7 +84,6 @@
       { text: "It is not length of life, but depth of life.", author: "Ralph Waldo Emerson" },
       { text: "Science is what you know. Philosophy is what you don't know.", author: "Bertrand Russell" },
       { text: "You only live once, but if you do it right, once is enough.", author: "Mae West" },
-      { text: "The unexamined life is not worth living.", author: "Socrates" },
       { text: "Knowledge is power.", author: "Francis Bacon" },
       { text: "We are too weak to discover the truth by reason alone.", author: "St. Augustine" },
       { text: "All that we are is the result of what we have thought.", author: "Buddha" },
@@ -132,8 +131,18 @@
       { text: "Without music, life would be a mistake.", author: "Friedrich Nietzsche" }
     ];
 
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    const quote = quotes[randomIndex];
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const saved = JSON.parse(localStorage.getItem('dailyQuote') || '{}');
+
+    let quote;
+    if (saved.date === todayKey) {
+      quote = quotes[saved.index];
+    } else {
+      const index = Math.floor(Math.random() * quotes.length);
+      quote = quotes[index];
+      localStorage.setItem('dailyQuote', JSON.stringify({ date: todayKey, index }));
+    }
+
     document.getElementById("quote").textContent = `"${quote.text}"`;
     document.getElementById("author").textContent = `- ${quote.author}`;
   </script>
