@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Schedule</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .schedule-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .past, .future {
+      padding: 10px;
+    }
+    .past {
+      background-color: #e0e0e0;
+    }
+    .future {
+      background-color: #ffffff;
+    }
+    .slot {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    .slot:last-child {
+      border-bottom: none;
+    }
+    details summary {
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #d0d0d0;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="schedule-container">
+    <details open>
+      <summary>Past Time Slots</summary>
+      <div class="past" id="past-slots"></div>
+    </details>
+    <div class="future" id="future-slots"></div>
+  </div>
+
+  <script>
+    const pad = n => n.toString().padStart(2, '0');
+
+    function generateSchedule() {
+      const startHour = 0;
+      const endHour = 24;
+      const interval = 30; // minutes
+      const now = new Date();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+      const pastContainer = document.getElementById('past-slots');
+      const futureContainer = document.getElementById('future-slots');
+
+      for (let minutes = startHour * 60; minutes < endHour * 60; minutes += interval) {
+        const hour = Math.floor(minutes / 60);
+        const min = minutes % 60;
+        const timeLabel = `${pad(hour)}:${pad(min)}`;
+        const slot = document.createElement('div');
+        slot.className = 'slot';
+        slot.textContent = timeLabel;
+
+        if (minutes < currentMinutes) {
+          pastContainer.appendChild(slot);
+        } else {
+          futureContainer.appendChild(slot);
+        }
+      }
+    }
+
+    generateSchedule();
+  </script>
+</body>
+</html>
