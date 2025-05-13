@@ -3,84 +3,139 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daily Schedule</title>
+  <title>Philosophical Quotes</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Georgia', serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
       padding: 20px;
-      background-color: #f4f4f4;
+      text-align: center;
     }
-    .schedule-container {
-      max-width: 600px;
-      margin: 0 auto;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      overflow: hidden;
+    .quote {
+      font-size: 1.8em;
+      max-width: 800px;
     }
-    .past, .future {
-      padding: 10px;
-    }
-    .past {
-      background-color: #e0e0e0;
-    }
-    .future {
-      background-color: #ffffff;
-    }
-    .slot {
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
-    }
-    .slot:last-child {
-      border-bottom: none;
-    }
-    details summary {
-      cursor: pointer;
-      font-weight: bold;
-      background-color: #d0d0d0;
-      padding: 10px;
+    .author {
+      margin-top: 20px;
+      font-size: 1.2em;
+      opacity: 0.7;
     }
   </style>
 </head>
 <body>
-  <div class="schedule-container">
-    <details open>
-      <summary>Past Time Slots</summary>
-      <div class="past" id="past-slots"></div>
-    </details>
-    <div class="future" id="future-slots"></div>
+  <div class="quote-box">
+    <div class="quote" id="quote"></div>
+    <div class="author" id="author"></div>
   </div>
 
   <script>
-    const pad = n => n.toString().padStart(2, '0');
+    const quotes = [
+      { text: "The unexamined life is not worth living.", author: "Socrates" },
+      { text: "I think, therefore I am.", author: "René Descartes" },
+      { text: "Happiness is not something ready made. It comes from your own actions.", author: "Dalai Lama" },
+      { text: "To live is the rarest thing in the world. Most people exist, that is all.", author: "Oscar Wilde" },
+      { text: "He who opens a school door, closes a prison.", author: "Victor Hugo" },
+      { text: "No man's knowledge here can go beyond his experience.", author: "John Locke" },
+      { text: "Life must be understood backward. But it must be lived forward.", author: "Søren Kierkegaard" },
+      { text: "Injustice anywhere is a threat to justice everywhere.", author: "Martin Luther King Jr." },
+      { text: "Liberty consists in doing what one desires.", author: "John Stuart Mill" },
+      { text: "The greatest wealth is to live content with little.", author: "Plato" },
+      { text: "Knowing yourself is the beginning of all wisdom.", author: "Aristotle" },
+      { text: "Man is condemned to be free.", author: "Jean-Paul Sartre" },
+      { text: "Happiness depends upon ourselves.", author: "Aristotle" },
+      { text: "Even while they teach, men learn.", author: "Seneca" },
+      { text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Will Durant (attributing Aristotle)" },
+      { text: "Do not spoil what you have by desiring what you have not.", author: "Epicurus" },
+      { text: "The only true wisdom is in knowing you know nothing.", author: "Socrates" },
+      { text: "What we achieve inwardly will change outer reality.", author: "Plutarch" },
+      { text: "I would never die for my beliefs because I might be wrong.", author: "Bertrand Russell" },
+      { text: "Time is a created thing. To say 'I don’t have time' is to say 'I don’t want to'.", author: "Lao Tzu" },
+      { text: "Freedom is secured not by the fulfilling of men's desires, but by the removal of desire.", author: "Epictetus" },
+      { text: "The mind is furnished with ideas by experience alone.", author: "John Locke" },
+      { text: "Happiness is not an ideal of reason, but of imagination.", author: "Immanuel Kant" },
+      { text: "You can discover more about a person in an hour of play than in a year of conversation.", author: "Plato" },
+      { text: "Everything that exists is born for no reason, carries on living through weakness, and dies by accident.", author: "Jean-Paul Sartre" },
+      { text: "Out of suffering have emerged the strongest souls.", author: "Kahlil Gibran" },
+      { text: "The heaviest penalty for declining to rule is to be ruled by someone inferior to yourself.", author: "Plato" },
+      { text: "We suffer more often in imagination than in reality.", author: "Seneca" },
+      { text: "Is man merely a mistake of God's? Or God merely a mistake of man's?", author: "Friedrich Nietzsche" },
+      { text: "The only thing I know is that I know nothing.", author: "Socrates" },
+      { text: "Man is born free and everywhere he is in chains.", author: "Jean-Jacques Rousseau" },
+      { text: "He who thinks great thoughts, often makes great errors.", author: "Martin Heidegger" },
+      { text: "To be is to be perceived.", author: "George Berkeley" },
+      { text: "Those who know do not speak. Those who speak do not know.", author: "Lao Tzu" },
+      { text: "The purpose of our lives is to be happy.", author: "Dalai Lama" },
+      { text: "God is dead! He remains dead! And we have killed him.", author: "Friedrich Nietzsche" },
+      { text: "You must become who you are.", author: "Friedrich Nietzsche" },
+      { text: "An unhurried sense of time is in itself a form of wealth.", author: "Bonnie Friedman" },
+      { text: "To enjoy the things we ought and to hate the things we ought has the greatest bearing on excellence of character.", author: "Aristotle" },
+      { text: "Love is composed of a single soul inhabiting two bodies.", author: "Aristotle" },
+      { text: "Every man takes the limits of his own field of vision for the limits of the world.", author: "Arthur Schopenhauer" },
+      { text: "There is but one truly serious philosophical problem and that is suicide.", author: "Albert Camus" },
+      { text: "Man is nothing else but what he makes of himself.", author: "Jean-Paul Sartre" },
+      { text: "A wise man is he who does not grieve for the things which he has not, but rejoices for those which he has.", author: "Epictetus" },
+      { text: "Virtue is nothing else than right reason.", author: "Seneca" },
+      { text: "It is not length of life, but depth of life.", author: "Ralph Waldo Emerson" },
+      { text: "Science is what you know. Philosophy is what you don't know.", author: "Bertrand Russell" },
+      { text: "You only live once, but if you do it right, once is enough.", author: "Mae West" },
+      { text: "The unexamined life is not worth living.", author: "Socrates" },
+      { text: "Knowledge is power.", author: "Francis Bacon" },
+      { text: "We are too weak to discover the truth by reason alone.", author: "St. Augustine" },
+      { text: "All that we are is the result of what we have thought.", author: "Buddha" },
+      { text: "A man who has committed a mistake and doesn’t correct it is committing another mistake.", author: "Confucius" },
+      { text: "Life without experience and sufferings is not life.", author: "Socrates" },
+      { text: "It is not death that a man should fear, but he should fear never beginning to live.", author: "Marcus Aurelius" },
+      { text: "The more you know, the more you realize you don't know.", author: "Aristotle" },
+      { text: "What is rational is actual and what is actual is rational.", author: "Georg Wilhelm Friedrich Hegel" },
+      { text: "Man is the measure of all things.", author: "Protagoras" },
+      { text: "If you are lonely when you're alone, you are in bad company.", author: "Jean-Paul Sartre" },
+      { text: "Truth is the offspring of silence and meditation.", author: "Isaac Newton" },
+      { text: "The greater the difficulty, the more glory in surmounting it.", author: "Epicurus" },
+      { text: "Every saint has a past, and every sinner has a future.", author: "Oscar Wilde" },
+      { text: "Morality is not the doctrine of how we may make ourselves happy, but how we may make ourselves worthy of happiness.", author: "Immanuel Kant" },
+      { text: "All that is necessary for evil to triumph is for good men to do nothing.", author: "Edmund Burke" },
+      { text: "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.", author: "Ralph Waldo Emerson" },
+      { text: "Liberty is the right to do what the law permits.", author: "Montesquieu" },
+      { text: "Philosophy begins in wonder.", author: "Plato" },
+      { text: "Life is really simple, but we insist on making it complicated.", author: "Confucius" },
+      { text: "We live in the best of all possible worlds.", author: "Gottfried Wilhelm Leibniz" },
+      { text: "All men by nature desire to know.", author: "Aristotle" },
+      { text: "Success usually comes to those who are too busy to be looking for it.", author: "Henry David Thoreau" },
+      { text: "To know what you know and what you do not know, that is true knowledge.", author: "Confucius" },
+      { text: "There is only one good, knowledge, and one evil, ignorance.", author: "Socrates" },
+      { text: "Do not go where the path may lead, go instead where there is no path and leave a trail.", author: "Ralph Waldo Emerson" },
+      { text: "He who is not a good servant will not be a good master.", author: "Plato" },
+      { text: "Man conquers the world by conquering himself.", author: "Zeno of Citium" },
+      { text: "No great mind has ever existed without a touch of madness.", author: "Aristotle" },
+      { text: "The worst form of inequality is to try to make unequal things equal.", author: "Aristotle" },
+      { text: "The fear of death follows from the fear of life.", author: "Mark Twain" },
+      { text: "We are not what we know but what we are willing to learn.", author: "Mary Catherine Bateson" },
+      { text: "The function of prayer is not to influence God, but rather to change the nature of the one who prays.", author: "Søren Kierkegaard" },
+      { text: "The limits of my language mean the limits of my world.", author: "Ludwig Wittgenstein" },
+      { text: "Justice is the first virtue of social institutions.", author: "John Rawls" },
+      { text: "Only the educated are free.", author: "Epictetus" },
+      { text: "The way to gain a good reputation is to endeavor to be what you desire to appear.", author: "Socrates" },
+      { text: "Each man is a creature of the age in which he lives, and few are able to raise themselves above the ideas of the time.", author: "Voltaire" },
+      { text: "A journey of a thousand miles begins with a single step.", author: "Lao Tzu" },
+      { text: "A room without books is like a body without a soul.", author: "Cicero" },
+      { text: "To know oneself, one should assert oneself.", author: "Albert Camus" },
+      { text: "The only way to deal with this life meaningfully is to find your own values.", author: "Friedrich Nietzsche" },
+      { text: "Reason is, and ought only to be the slave of the passions.", author: "David Hume" },
+      { text: "All is for the best in the best of all possible worlds.", author: "Voltaire" },
+      { text: "Man is a rational animal.", author: "Aristotle" },
+      { text: "Without music, life would be a mistake.", author: "Friedrich Nietzsche" }
+    ];
 
-    function generateSchedule() {
-      const startHour = 0;
-      const endHour = 24;
-      const interval = 30; // minutes
-      const now = new Date();
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-      const pastContainer = document.getElementById('past-slots');
-      const futureContainer = document.getElementById('future-slots');
-
-      for (let minutes = startHour * 60; minutes < endHour * 60; minutes += interval) {
-        const hour = Math.floor(minutes / 60);
-        const min = minutes % 60;
-        const timeLabel = `${pad(hour)}:${pad(min)}`;
-        const slot = document.createElement('div');
-        slot.className = 'slot';
-        slot.textContent = timeLabel;
-
-        if (minutes < currentMinutes) {
-          pastContainer.appendChild(slot);
-        } else {
-          futureContainer.appendChild(slot);
-        }
-      }
-    }
-
-    generateSchedule();
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    const quote = quotes[randomIndex];
+    document.getElementById("quote").textContent = `"${quote.text}"`;
+    document.getElementById("author").textContent = `- ${quote.author}`;
   </script>
 </body>
 </html>
